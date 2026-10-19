@@ -8,3 +8,4 @@ site/src/data/index.json
 site/public/index.json
 site/test-results/
 site/playwright-report/
+plugins/*/evals/results/

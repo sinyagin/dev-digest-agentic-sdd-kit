@@ -1,0 +1,13 @@
+{
+  "name": "engineering-paved-path",
+  "displayName": "Engineering Paved Path",
+  "version": "1.0.0",
+  "description": "Reusable engineering skills: React, Next.js, Fastify, Drizzle, PostgreSQL, Zod, TypeScript, architecture, testing, security and diagrams",
+  "author": {
+    "name": "Andrii Syniagin",
+    "url": "https://github.com/sinyagin"
+  },
+  "repository": "https://github.com/sinyagin/dev-digest-agentic-sdd-kit",
+  "license": "MIT",
+  "keywords": ["skills", "react", "nextjs", "fastify", "drizzle", "typescript", "architecture", "security"]
+}

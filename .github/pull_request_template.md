@@ -4,7 +4,7 @@
 
 ## Affected plugins
 
-<!-- e.g. sdd-kit -->
+<!-- e.g. sdd-engineering -->
 
 ## Checklist
 

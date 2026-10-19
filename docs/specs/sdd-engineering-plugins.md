@@ -173,7 +173,7 @@ Humans approve the spec and the plan. `run-plan` never pushes, merges or opens a
 - AC1. WHEN `node scripts/validate-marketplace.mjs` runs THEN it SHALL pass.
 - AC2. WHEN a user installs `sdd-engineering@dev-digest-agentic-sdd-kit` THEN Claude Code SHALL also install and enable `engineering-paved-path`, `research-tools` and `architecture-review`.
 - AC3. WHEN a user installs `architecture-review` alone THEN Claude Code SHALL also install `engineering-paved-path`.
-- AC4. WHEN `grep -riE "devdigest|dev-digest|reviewer-core|\.claude/(skills|agents)" plugins/` runs THEN it SHALL return no matches.
+- AC4. WHEN `grep -riE "devdigest|reviewer-core|\.claude/(skills|agents)" plugins/` runs THEN it SHALL return no matches. (The marketplace's own name, `dev-digest-agentic-sdd-kit`, may appear in install commands and repository URLs.)
 - AC5. Every agent `skills:` entry SHALL name a skill that exists in `engineering-paved-path` with the `engineering-paved-path:` prefix.
 - AC6. Every plugin SHALL have a README and a CHANGELOG with a `1.0.0` section.
 - AC7. WHEN the site builds THEN its index SHALL list all agents and skills of the four plugins.

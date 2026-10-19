@@ -55,5 +55,5 @@
 ## Conventions
 
 - All content is in English.
-- Commit messages: `<type>(<plugin>): <summary>`, e.g. `feat(sdd-kit): add spec-review skill`. Types: `feat`, `fix`, `docs`, `chore`, `release`, `rollback`.
+- Commit messages: `<type>(<plugin>): <summary>`, e.g. `feat(sdd-engineering): add spec-review skill`. Types: `feat`, `fix`, `docs`, `chore`, `release`, `rollback`.
 - See [docs/SECURITY.md](docs/SECURITY.md) before adding hooks, MCP servers, or scripts.

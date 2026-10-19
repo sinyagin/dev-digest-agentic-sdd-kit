@@ -1,0 +1,16 @@
+{
+  "name": "architecture-review",
+  "displayName": "Architecture Review",
+  "version": "1.0.0",
+  "description": "Read-only architecture-reviewer agent that audits a diff against the project's documented structural contracts",
+  "author": {
+    "name": "Andrii Syniagin",
+    "url": "https://github.com/sinyagin"
+  },
+  "repository": "https://github.com/sinyagin/dev-digest-agentic-sdd-kit",
+  "license": "MIT",
+  "keywords": ["architecture", "review", "agent", "read-only"],
+  "dependencies": [
+    { "name": "engineering-paved-path", "version": "^1.0.0" }
+  ]
+}
