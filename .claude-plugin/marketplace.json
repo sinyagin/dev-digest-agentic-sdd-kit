@@ -1,0 +1,17 @@
+{
+  "name": "dev-digest-agentic-sdd-kit",
+  "description": "Agentic spec-driven development kit for Claude Code",
+  "owner": {
+    "name": "Andrii Syniagin",
+    "url": "https://github.com/sinyagin"
+  },
+  "plugins": [
+    {
+      "name": "sdd-kit",
+      "source": "./plugins/sdd-kit",
+      "description": "Spec-driven development skills, agents and commands",
+      "category": "development",
+      "tags": ["sdd", "spec-driven", "workflow"]
+    }
+  ]
+}
