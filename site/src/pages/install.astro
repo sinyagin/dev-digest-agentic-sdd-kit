@@ -1,0 +1,81 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { withBase } from "../lib/base";
+import { index } from "../lib/data";
+---
+
+<Layout title="Install builder" description="Pick plugins and get install commands or a project settings snippet.">
+  <header class="detail-head" style="padding-top: 32px">
+    <h1>Install builder</h1>
+    <p class="lead">Pick plugins, then copy the commands for yourself or a <code>.claude/settings.json</code> snippet for your whole team.</p>
+  </header>
+
+  <div class="builder" id="builder" data-marketplace={index.marketplace.name} data-repo={index.marketplace.repo}>
+    <section class="panel">
+      <h2>Plugins</h2>
+      {index.plugins.map((p) => (
+        <label class="plugin-option">
+          <input type="checkbox" value={p.name} data-plugin-option />
+          <span>
+            <strong>{p.displayName ?? p.name}</strong> <span class="hint">v{p.version}</span>
+            <small>{p.description}</small>
+            <small><a href={withBase(`p/${p.name}/`)}>Details</a></small>
+          </span>
+        </label>
+      ))}
+    </section>
+
+    <section class="panel">
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab" role="tab" id="tab-commands" aria-controls="pane-commands" aria-selected="true">Commands</button>
+        <button type="button" class="tab" role="tab" id="tab-settings" aria-controls="pane-settings" aria-selected="false">Project settings</button>
+      </div>
+      <div id="pane-commands" role="tabpanel" aria-labelledby="tab-commands">
+        <p class="hint">Run these in Claude Code to install for yourself.</p>
+        <pre class="output" id="out-commands"></pre>
+      </div>
+      <div id="pane-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
+        <p class="hint">Merge into <code>.claude/settings.json</code> in your project and commit it. Teammates are offered the marketplace and plugins when they trust the folder.</p>
+        <pre class="output" id="out-settings"></pre>
+      </div>
+      <p class="hint" id="builder-empty">Select at least one plugin to generate output.</p>
+      <button type="button" class="btn btn-primary" id="copy-output" data-copy-from="out-commands" disabled>Copy</button>
+    </section>
+  </div>
+
+  <script>
+    import { installCommands, projectSettings } from "../install/generate";
+    import { getSelected, onSelectedChange, setSelected } from "../install/store";
+
+    const root = document.getElementById("builder")!;
+    const marketplace = { name: root.dataset.marketplace!, repo: root.dataset.repo! };
+    const options = [...document.querySelectorAll<HTMLInputElement>("[data-plugin-option]")];
+    const known = new Set(options.map((o) => o.value));
+    const copy = document.getElementById("copy-output") as HTMLButtonElement;
+    const tabs = [...document.querySelectorAll<HTMLButtonElement>("[role=tab]")];
+
+    function render(selected = getSelected().filter((p) => known.has(p))) {
+      options.forEach((o) => (o.checked = selected.includes(o.value)));
+      document.getElementById("out-commands")!.textContent = selected.length ? installCommands(marketplace, selected) : "";
+      document.getElementById("out-settings")!.textContent = selected.length ? projectSettings(marketplace, selected) : "";
+      document.getElementById("builder-empty")!.hidden = selected.length > 0;
+      copy.disabled = selected.length === 0;
+    }
+
+    options.forEach((o) =>
+      o.addEventListener("change", () => setSelected(options.filter((x) => x.checked).map((x) => x.value))),
+    );
+    tabs.forEach((tab) =>
+      tab.addEventListener("click", () => {
+        tabs.forEach((t) => {
+          const on = t === tab;
+          t.setAttribute("aria-selected", String(on));
+          document.getElementById(t.getAttribute("aria-controls")!)!.hidden = !on;
+        });
+        copy.dataset.copyFrom = tab.id === "tab-settings" ? "out-settings" : "out-commands";
+      }),
+    );
+    onSelectedChange((s) => render(s.filter((p) => known.has(p))));
+    render();
+  </script>
+</Layout>

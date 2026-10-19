@@ -1,0 +1,51 @@
+---
+import "../styles/global.css";
+import { withBase } from "../lib/base";
+import { index } from "../lib/data";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { marketplace } = index;
+const { title, description = marketplace.description } = Astro.props;
+const pageTitle = title ? `${title} · ${marketplace.name}` : marketplace.name;
+const repoUrl = marketplace.repo ? `https://github.com/${marketplace.repo}` : "";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href={withBase("favicon.svg")} type="image/svg+xml" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap header-row">
+        <a class="brand" href={withBase()}>{marketplace.name}</a>
+        <nav aria-label="Main">
+          <a class="btn btn-ghost" href={withBase("install/")}>
+            Install builder <span id="install-count" class="count-pill" hidden>0</span>
+          </a>
+          {repoUrl && <a class="btn btn-ghost" href={repoUrl} target="_blank" rel="noopener">GitHub</a>}
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="wrap">
+      <slot />
+    </main>
+    <footer class="site-footer wrap">
+      <span>Built from <code>{index.commit.slice(0, 7)}</code></span>
+      {repoUrl && <a href={repoUrl} target="_blank" rel="noopener">{marketplace.repo}</a>}
+    </footer>
+    <script>
+      import "../scripts/global";
+    </script>
+  </body>
+</html>

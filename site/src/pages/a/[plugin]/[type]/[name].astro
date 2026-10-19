@@ -1,0 +1,103 @@
+---
+import { renderCard } from "../../../../components/card";
+import Layout from "../../../../layouts/Layout.astro";
+import { withBase } from "../../../../lib/base";
+import { index, pluginByName } from "../../../../lib/data";
+import { renderMarkdown } from "../../../../lib/markdown";
+import { TYPE_LABELS, type Artifact } from "../../../../lib/types";
+import { defaultOrder } from "../../../../search/engine";
+import { installCommands } from "../../../../install/generate";
+
+export function getStaticPaths() {
+  return index.artifacts.map((artifact) => ({
+    params: { plugin: artifact.plugin, type: artifact.type, name: artifact.slug },
+    props: { artifact },
+  }));
+}
+
+const { artifact } = Astro.props as { artifact: Artifact };
+const base = withBase();
+const plugin = pluginByName(artifact.plugin)!;
+const html = await renderMarkdown(artifact.body);
+const install = installCommands(index.marketplace, [artifact.plugin]);
+const pluginRoot = index.marketplace.repo ? `https://github.com/${index.marketplace.repo}/blob/main/${plugin.path}/` : "";
+const others = index.artifacts
+  .filter((a) => a.plugin === artifact.plugin && a.id !== artifact.id)
+  .sort(defaultOrder)
+  .slice(0, 6);
+
+const formatValue = (v: unknown) =>
+  Array.isArray(v) ? v.join(", ") : v !== null && typeof v === "object" ? JSON.stringify(v) : String(v);
+const meta = Object.entries(artifact.frontmatter).filter(([k]) => k !== "description" && k !== "name");
+---
+
+<Layout title={artifact.name} description={artifact.description}>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href={base}>All artifacts</a> / <a href={`${base}p/${plugin.name}/`}>{plugin.name}</a> / {TYPE_LABELS[artifact.type].many}
+  </nav>
+
+  <header class="detail-head">
+    <span class={`badge badge-${artifact.type}`}>{TYPE_LABELS[artifact.type].one}</span>
+    <h1>{artifact.name}</h1>
+    <p class="lead">{artifact.description}</p>
+    {artifact.tags.length > 0 && (
+      <ul class="tags" style="margin-top: 12px">
+        {artifact.tags.map((t) => <li><a class="tag" href={`${base}?tag=${encodeURIComponent(t)}`}>#{t}</a></li>)}
+      </ul>
+    )}
+  </header>
+
+  <div class="detail-layout">
+    <article class="panel prose" set:html={html} />
+
+    <aside>
+      <section class="panel">
+        <h2>How to use</h2>
+        {artifact.invocation && (
+          <div class="codeblock">
+            <pre id="invocation">{artifact.invocation}</pre>
+            <button type="button" class="btn-icon" data-copy-from="invocation" aria-label="Copy invocation">Copy</button>
+          </div>
+        )}
+        <p class="hint">Install the <a href={`${base}p/${plugin.name}/`}>{plugin.name}</a> plugin (v{plugin.version}):</p>
+        <div class="codeblock">
+          <pre id="install">{install}</pre>
+          <button type="button" class="btn-icon" data-copy-from="install" aria-label="Copy install commands">Copy</button>
+        </div>
+        <button type="button" class="btn btn-small" data-add-plugin={plugin.name} data-label="+ Add to install builder" aria-pressed="false">+ Add to install builder</button>
+      </section>
+
+      {meta.length > 0 && (
+        <section class="panel">
+          <h2>Details</h2>
+          <table class="meta-table">
+            <tbody>
+              {meta.map(([k, v]) => (
+                <tr><th scope="row">{k}</th><td><code>{formatValue(v)}</code></td></tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
+      <section class="panel">
+        <h2>Files</h2>
+        <ul class="file-list">
+          {artifact.files.map((f) => (
+            <li>{pluginRoot ? <a href={`${pluginRoot}${f}`} target="_blank" rel="noopener">{f}</a> : <code>{f}</code>}</li>
+          ))}
+        </ul>
+        {artifact.sourceUrl && <p class="hint"><a href={artifact.sourceUrl} target="_blank" rel="noopener">View source on GitHub</a></p>}
+      </section>
+    </aside>
+  </div>
+
+  {others.length > 0 && (
+    <section>
+      <h2 class="section-title">Other artifacts in {plugin.name}</h2>
+      <div class="grid">
+        {others.map((a) => <Fragment set:html={renderCard(a, { base, version: plugin.version })} />)}
+      </div>
+    </section>
+  )}
+</Layout>

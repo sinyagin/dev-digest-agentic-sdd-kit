@@ -1,0 +1,31 @@
+{
+  "name": "dev-digest-agentic-sdd-kit-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "index": "node scripts/build-index.mjs",
+    "predev": "npm run index",
+    "dev": "astro dev",
+    "prebuild": "npm run index",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "astro": "^7.4.0",
+    "gray-matter": "^4.0.3",
+    "minisearch": "^7.2.0",
+    "rehype-sanitize": "^6.0.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "unified": "^11.0.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

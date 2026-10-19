@@ -1,0 +1,80 @@
+---
+import { renderCard } from "../components/card";
+import Layout from "../layouts/Layout.astro";
+import { withBase } from "../lib/base";
+import { index, pluginByName } from "../lib/data";
+import { ARTIFACT_TYPES, TYPE_LABELS } from "../lib/types";
+import { defaultOrder } from "../search/engine";
+
+const base = withBase();
+const artifacts = [...index.artifacts].sort(defaultOrder);
+const typeCounts = Object.fromEntries(ARTIFACT_TYPES.map((t) => [t, artifacts.filter((a) => a.type === t).length]));
+const tagCounts = new Map<string, number>();
+for (const a of artifacts) for (const t of a.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+const topTags = [...tagCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 12);
+const examples = ["skill for writing specs", "agent for code review", "slash command for planning"];
+---
+
+<Layout>
+  <section class="hero">
+    <h1>{index.marketplace.name}</h1>
+    <p>{index.marketplace.description}</p>
+    <form class="search" role="search" action={base} method="get">
+      <label for="q" class="sr-only">Search artifacts</label>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" placeholder='Describe what you need… e.g. "skill for writing specs"' />
+    </form>
+    <div class="examples">
+      <span>Try:</span>
+      {examples.map((q) => <a href={`${base}?q=${encodeURIComponent(q)}`} data-example={q}>{q}</a>)}
+    </div>
+  </section>
+
+  <section class="filters" aria-label="Filters">
+    <div class="filter-row" id="type-filters">
+      <span class="filter-label">Type</span>
+      <button type="button" class="chip" data-type="" aria-pressed="true">All<span class="n">{artifacts.length}</span></button>
+      {ARTIFACT_TYPES.map((t) => (
+        <button type="button" class="chip" data-type={t} aria-pressed="false" disabled={typeCounts[t] === 0}>
+          {TYPE_LABELS[t].many}<span class="n">{typeCounts[t]}</span>
+        </button>
+      ))}
+    </div>
+    <div class="filter-row">
+      <label class="filter-label" for="plugin-filter">Plugin</label>
+      <select id="plugin-filter">
+        <option value="">All plugins</option>
+        {index.plugins.map((p) => <option value={p.name}>{p.displayName ?? p.name}</option>)}
+      </select>
+    </div>
+    <div class="filter-row" id="tag-filters">
+      {topTags.length > 0 && <span class="filter-label">Tags</span>}
+      {topTags.map(([t, n]) => (
+        <button type="button" class="chip" data-tag-filter={t} aria-pressed="false">#{t}<span class="n">{n}</span></button>
+      ))}
+    </div>
+  </section>
+
+  <div class="result-bar">
+    <span id="result-count" aria-live="polite">{artifacts.length} {artifacts.length === 1 ? "artifact" : "artifacts"}</span>
+    <button type="button" class="btn-icon" id="clear-filters" hidden>Clear filters</button>
+  </div>
+  <p class="notice" id="notice" hidden></p>
+
+  <div class="grid" id="results">
+    {artifacts.map((a) => <Fragment set:html={renderCard(a, { base, version: pluginByName(a.plugin)?.version })} />)}
+  </div>
+
+  <div class="empty" id="empty" hidden>
+    <h2>Nothing matches yet</h2>
+    <p id="empty-text">Try other words, or browse everything in the marketplace.</p>
+    <div class="actions">
+      <button type="button" class="btn" id="empty-clear">Clear filters</button>
+      <button type="button" class="btn btn-primary" id="empty-all">Show all artifacts</button>
+    </div>
+  </div>
+
+  <script>
+    import "../scripts/home";
+  </script>
+</Layout>

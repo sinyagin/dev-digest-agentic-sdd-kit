@@ -2,3 +2,9 @@
 .DS_Store
 docs/temp/
 node_modules/
+site/dist/
+site/.astro/
+site/src/data/index.json
+site/public/index.json
+site/test-results/
+site/playwright-report/
