@@ -1,0 +1,70 @@
+---
+import { renderCard } from "../../components/card";
+import Layout from "../../layouts/Layout.astro";
+import { withBase } from "../../lib/base";
+import { index } from "../../lib/data";
+import { ARTIFACT_TYPES, TYPE_LABELS, type Plugin } from "../../lib/types";
+import { defaultOrder } from "../../search/engine";
+import { installCommands } from "../../install/generate";
+
+export function getStaticPaths() {
+  return index.plugins.map((plugin) => ({ params: { plugin: plugin.name }, props: { plugin } }));
+}
+
+const { plugin } = Astro.props as { plugin: Plugin };
+const base = withBase();
+const artifacts = index.artifacts.filter((a) => a.plugin === plugin.name).sort(defaultOrder);
+const install = installCommands(index.marketplace, [plugin.name]);
+const sourceUrl = index.marketplace.repo && plugin.path ? `https://github.com/${index.marketplace.repo}/tree/main/${plugin.path}` : "";
+---
+
+<Layout title={plugin.displayName ?? plugin.name} description={plugin.description}>
+  <nav class="crumbs" aria-label="Breadcrumb"><a href={base}>All artifacts</a> / Plugins</nav>
+
+  <header class="detail-head">
+    <span class="badge badge-skill">Plugin</span>
+    <h1>{plugin.displayName ?? plugin.name}</h1>
+    <p class="lead">{plugin.description}</p>
+    <ul class="counts">
+      {ARTIFACT_TYPES.filter((t) => plugin.counts[t] > 0).map((t) => (
+        <li><span class={`badge badge-${t}`}>{plugin.counts[t]} {plugin.counts[t] === 1 ? TYPE_LABELS[t].one : TYPE_LABELS[t].many}</span></li>
+      ))}
+    </ul>
+  </header>
+
+  <div class="detail-layout">
+    <section class="panel">
+      <h2>Install</h2>
+      <div class="codeblock">
+        <pre id="install">{install}</pre>
+        <button type="button" class="btn-icon" data-copy-from="install" aria-label="Copy install commands">Copy</button>
+      </div>
+      <button type="button" class="btn btn-small" data-add-plugin={plugin.name} data-label="+ Add to install builder" aria-pressed="false">+ Add to install builder</button>
+    </section>
+
+    <aside class="panel">
+      <h2>About</h2>
+      <table class="meta-table">
+        <tbody>
+          <tr><th scope="row">Name</th><td><code>{plugin.name}</code></td></tr>
+          <tr><th scope="row">Version</th><td>{plugin.version}</td></tr>
+          {plugin.category && <tr><th scope="row">Category</th><td>{plugin.category}</td></tr>}
+          {plugin.license && <tr><th scope="row">License</th><td>{plugin.license}</td></tr>}
+          {plugin.tags.length > 0 && (
+            <tr><th scope="row">Tags</th><td>{plugin.tags.map((t, i) => <>{i > 0 && ", "}<a href={`${base}?tag=${encodeURIComponent(t)}`}>{t}</a></>)}</td></tr>
+          )}
+          {sourceUrl && <tr><th scope="row">Source</th><td><a href={sourceUrl} target="_blank" rel="noopener">{plugin.path}</a></td></tr>}
+        </tbody>
+      </table>
+    </aside>
+  </div>
+
+  <h2 class="section-title">Artifacts</h2>
+  {artifacts.length > 0 ? (
+    <div class="grid">
+      {artifacts.map((a) => <Fragment set:html={renderCard(a, { base, version: plugin.version })} />)}
+    </div>
+  ) : (
+    <p class="hint">This plugin is listed in the marketplace but its contents live in another repository.</p>
+  )}
+</Layout>

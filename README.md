@@ -26,6 +26,22 @@ claude plugin marketplace add sinyagin/dev-digest-agentic-sdd-kit --scope projec
 | --- | --- |
 | [`sdd-kit`](plugins/sdd-kit) | Spec-driven development skills, agents and commands |
 
+## Website
+
+Browse and search every skill, agent, command, hook and MCP server at
+**https://sinyagin.github.io/dev-digest-agentic-sdd-kit/**. It rebuilds automatically on every push to `main`
+from the contents of `plugins/` (see [`docs/specs/marketplace-site.md`](docs/specs/marketplace-site.md)).
+
+Run it locally:
+
+```
+cd site
+npm ci
+npm run dev        # builds the index, then serves http://localhost:4321/dev-digest-agentic-sdd-kit/
+npm test           # indexer + search unit tests
+npm run build && npm run test:e2e
+```
+
 ## Repository layout
 
 ```

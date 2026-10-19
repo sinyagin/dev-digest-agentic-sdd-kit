@@ -1,0 +1,9 @@
+{
+  "name": "fixture-market",
+  "description": "Fixture marketplace",
+  "owner": { "name": "Tester" },
+  "plugins": [
+    { "name": "alpha", "source": "./plugins/alpha", "category": "development", "tags": ["sdd"] },
+    { "name": "remote", "source": { "source": "github", "repo": "someone/remote" }, "description": "Remote plugin" }
+  ]
+}
