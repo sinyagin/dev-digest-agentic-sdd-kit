@@ -1,13 +1,13 @@
 {
   "name": "research-tools",
   "displayName": "Research Tools",
-  "version": "1.0.0",
-  "description": "Read-only researcher agent that finds and fact-checks information in the project or on the web and returns it in a strict, cited format",
+  "version": "1.1.0",
+  "description": "Read-only researcher agent and /research skill that finds and fact-checks information in the project or on the web and returns it in a strict, cited format",
   "author": {
     "name": "Andrii Syniagin",
     "url": "https://github.com/sinyagin"
   },
   "repository": "https://github.com/sinyagin/dev-digest-agentic-sdd-kit",
   "license": "MIT",
-  "keywords": ["research", "agent", "read-only"]
+  "keywords": ["research", "agent", "skill", "read-only"]
 }
