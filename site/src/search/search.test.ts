@@ -36,7 +36,7 @@ describe("search on the repository index", () => {
 
   it("S3: tolerates typos in longer words", () => {
     expect(engine.search("retrospectve", noFilters).hits[0]?.artifact.id).toBe("sdd-engineering:skill:workflow-retro");
-    expect(engine.search("reserch", noFilters).hits[0]?.artifact.id).toBe("research-tools:agent:researcher");
+    expect(engine.search("reserch", noFilters).hits[0]?.artifact.id).toBe("research-tools:skill:research");
   });
 });
 

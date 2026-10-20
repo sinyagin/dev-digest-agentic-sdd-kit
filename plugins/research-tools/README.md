@@ -1,6 +1,6 @@
 # Research Tools
 
-A read-only research agent for Claude Code. It finds information in the current project or on the
+A read-only research agent for Claude Code, plus a `research` skill that runs it in parallel. It finds information in the current project or on the
 public web, and fact-checks it. It returns a strict, cited Markdown report. It never changes
 anything.
 
@@ -19,6 +19,7 @@ The plugin has no dependencies. [`sdd-engineering`](../sdd-engineering) depends 
 | Component | Type | Model | Tools |
 | --- | --- | --- | --- |
 | `research-tools:researcher` | agent | sonnet | Read, Glob, Grep, Bash, WebSearch, WebFetch (no Edit or Write) |
+| `/research-tools:research` | skill | main session | Dispatches `researcher` agents and merges their reports |
 
 ## Usage
 
@@ -30,7 +31,21 @@ Use research-tools:researcher to check whether Fastify 5 still supports the `onR
 ```
 
 To keep raw exploration out of your main context, split a broad question into independent strands.
-Then launch several researchers in parallel, one per strand.
+Then launch several researchers in parallel, one per strand. The `research` skill does this for you:
+
+```
+/research-tools:research where is rate limiting configured, and what does Fastify recommend?
+/research-tools:research is the onRoute hook still supported in Fastify 5? mode:internet
+```
+
+| Token | Meaning | Default |
+| --- | --- | --- |
+| free-text question | What to find out (required) | — |
+| `mode:project` / `mode:internet` / `mode:mixed` | Force the mode for every researcher | the agent decides |
+| `strands:<n>` | Maximum parallel researchers, 1–4 | `3` |
+
+The skill returns one merged report: a summary, deduplicated cited findings, conflicts, every gap,
+and the lowest confidence among the strands.
 
 ## How it works
 
