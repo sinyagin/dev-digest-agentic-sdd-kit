@@ -19,7 +19,7 @@ After an update, `/reload-plugins` or a new session loads it.
   - **PATCH**: fixes and wording changes.
 - `version` lives only in `plugins/<plugin>/.claude-plugin/plugin.json`.
 - Each plugin has a `CHANGELOG.md`. Collect notes under `## Unreleased` while you work.
-- Each release is tagged `<plugin>--v<version>`, e.g. `sdd-kit--v1.2.0`. This is the convention Claude Code uses to resolve plugin dependency version ranges.
+- Each release is tagged `<plugin>--v<version>`, e.g. `sdd-engineering--v1.2.0`. This is the convention Claude Code uses to resolve plugin dependency version ranges.
 
 CI fails a pull request that changes a plugin without bumping its version and adding a matching CHANGELOG section. Changes to `README.md` files are exempt.
 
@@ -27,7 +27,7 @@ CI fails a pull request that changes a plugin without bumping its version and ad
 
 ```bash
 git switch main && git pull
-node scripts/release.mjs sdd-kit minor --notes "Add the spec-review skill" --pr
+node scripts/release.mjs sdd-engineering minor --notes "Add the spec-review skill" --pr
 ```
 
 The script:
@@ -49,7 +49,7 @@ A rollback is published as a **new** version. Re-publishing an older version str
 
 ```bash
 git switch main && git pull && git fetch --tags
-node scripts/rollback.mjs sdd-kit 1.1.0 --reason "1.2.0 breaks spec parsing" --pr
+node scripts/rollback.mjs sdd-engineering 1.1.0 --reason "1.2.0 breaks spec parsing" --pr
 ```
 
 The script:

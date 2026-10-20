@@ -7,11 +7,35 @@
   },
   "plugins": [
     {
-      "name": "sdd-kit",
-      "source": "./plugins/sdd-kit",
-      "description": "Spec-driven development skills, agents and commands",
+      "name": "sdd-engineering",
+      "source": "./plugins/sdd-engineering",
+      "description": "Spec-Driven Development workflow: spec, plan, implement, verify and retro",
       "category": "development",
-      "tags": ["sdd", "spec-driven", "workflow"]
+      "tags": ["sdd", "spec-driven", "workflow", "agents"]
+    },
+    {
+      "name": "engineering-paved-path",
+      "source": "./plugins/engineering-paved-path",
+      "description": "Reusable engineering skills for React, Next.js, Fastify, Drizzle, PostgreSQL, Zod, TypeScript, architecture, testing and security",
+      "category": "development",
+      "tags": ["skills", "frontend", "backend", "architecture", "security"]
+    },
+    {
+      "name": "research-tools",
+      "source": "./plugins/research-tools",
+      "description": "Read-only researcher agent with cited, structured answers",
+      "category": "productivity",
+      "tags": ["research", "agent"]
+    },
+    {
+      "name": "architecture-review",
+      "source": "./plugins/architecture-review",
+      "description": "Read-only architecture reviewer that audits diffs against documented contracts",
+      "category": "development",
+      "tags": ["architecture", "review", "agent"]
     }
-  ]
+  ],
+  "renames": {
+    "sdd-kit": null
+  }
 }

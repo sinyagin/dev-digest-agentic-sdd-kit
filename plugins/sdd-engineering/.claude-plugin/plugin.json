@@ -1,0 +1,18 @@
+{
+  "name": "sdd-engineering",
+  "displayName": "SDD Engineering",
+  "version": "1.0.0",
+  "description": "Spec-Driven Development workflow: spec-creator, implementation-planner, implementer and plan-verifier agents plus run-plan and workflow-retro skills",
+  "author": {
+    "name": "Andrii Syniagin",
+    "url": "https://github.com/sinyagin"
+  },
+  "repository": "https://github.com/sinyagin/dev-digest-agentic-sdd-kit",
+  "license": "MIT",
+  "keywords": ["sdd", "spec-driven", "workflow", "agents", "planning"],
+  "dependencies": [
+    { "name": "engineering-paved-path", "version": "^1.0.0" },
+    { "name": "research-tools", "version": "^1.0.0" },
+    { "name": "architecture-review", "version": "^1.0.0" }
+  ]
+}

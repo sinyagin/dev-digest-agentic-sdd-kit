@@ -30,12 +30,13 @@ describe("search on the repository index", () => {
   const index = buildIndex(repoRoot, opts) as SiteIndex;
   const engine = createEngine(index.artifacts);
 
-  it("S2: finds hello for a natural-language query", () => {
-    expect(engine.search("I need a skill to check the plugin works", noFilters).hits[0]?.artifact.id).toBe("sdd-kit:skill:hello");
+  it("S2: finds run-plan for a natural-language query", () => {
+    expect(engine.search("I need a skill to run an implementation plan", noFilters).hits[0]?.artifact.id).toBe("sdd-engineering:skill:run-plan");
   });
 
   it("S3: tolerates typos in longer words", () => {
-    expect(engine.search("plugn", noFilters).hits[0]?.artifact.id).toBe("sdd-kit:skill:hello");
+    expect(engine.search("retrospectve", noFilters).hits[0]?.artifact.id).toBe("sdd-engineering:skill:workflow-retro");
+    expect(engine.search("reserch", noFilters).hits[0]?.artifact.id).toBe("research-tools:agent:researcher");
   });
 });
 

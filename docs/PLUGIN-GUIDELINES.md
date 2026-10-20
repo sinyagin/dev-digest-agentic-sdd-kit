@@ -28,13 +28,14 @@ plugins/<name>/
 - The entry `name` in `marketplace.json` must equal `name` in `plugin.json`. ✓
 - Don't start a name with `claude-`, `anthropic-`, or `cc-plugin-`; these are reserved.
 - Never rename a published plugin's `name`. Change `displayName` instead. If a rename is unavoidable, add the old name to `renames` in `marketplace.json`.
-- Refer to skills with their namespace, e.g. `/sdd-kit:hello`, in docs and in other skills.
+- Refer to skills with their namespace, e.g. `/sdd-engineering:run-plan`, in docs and in other skills. Agents preload skills from another plugin with the namespaced name (`engineering-paved-path:zod`) and that plugin must be listed in `dependencies`.
 
 ## Manifest
 
 - Set `name`, `version`, `description`, `author`, and `license` in `plugin.json`.
 - Set `version` only in `plugin.json`, never in the marketplace entry. ✓
 - Use semantic versioning. ✓ See [RELEASES.md](RELEASES.md).
+- Declare plugins you rely on in `dependencies` with a caret range: `[{ "name": "engineering-paved-path", "version": "^1.0.0" }]`. Bare names resolve in this marketplace through `<plugin>--v<version>` tags.
 
 ## Skills and agents
 
